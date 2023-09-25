@@ -1,0 +1,26 @@
+http:
+  # add the prefix for legacy
+  middlewares:
+    addLegacy:
+      addPrefix:
+        prefix: "/npm/pkg"
+
+  # create a route for both current and legacy
+  routers:
+    registry:
+      rule: Host(`registry.localhost`) && (PathPrefix(`/npm/pkg/@neverendingsupport`) || PathPrefix(`/npm/pkg/@xlts.dev`))
+      service: registry-svc
+    legacy:
+      rule: Host(`legacy.localhost`) && (PathPrefix(`/@neverendingsupport`) || PathPrefix(`/@xlts.dev`))
+      middlewares:
+        - addLegacy # add the prefix
+      service: legacy-svc
+  services:
+    registry-svc:
+      loadBalancer:
+        servers:
+        - url: "http://host.docker.internal:3010/"
+    legacy-svc:
+      loadBalancer:
+        servers:
+        - url: "http://host.docker.internal:3010/"

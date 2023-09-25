@@ -1,0 +1,15 @@
+log:
+  level: debug
+entrypoints:
+  web:
+    address: :80
+api:
+  insecure: true
+# providers:
+#   docker: 
+#     exposedbydefault: false
+providers:
+  docker: false
+  file:
+    filename: /routes.yml
+    watch: true
