@@ -4,8 +4,8 @@ services:
 
   traefik:
     image: "traefik:v2.10"
-    command:
-      - "--configFile=/traefik.yml"
+    # command:
+    #   - "--configFile=/traefik.yml"
       # - "--log.level=DEBUG"
       # - "--log.filePath=/path/to/traefik.log"
       # - "--accesslog=true"
@@ -17,9 +17,10 @@ services:
       - "6500:80"
       - "6501:8080"
     volumes:
+      # NOTE: must be mounted to directory for live reload to work
+      - "./config/routes/:/traefik/:rw"
+      - "./config/traefik.yml:/etc/traefik/traefik.yml:rw"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - ./config/traefik.yml:/traefik.yml
-      - ./config/routes.yml:/routes.yml
 
   whoami:
     image: "traefik/whoami"

@@ -2,7 +2,7 @@ log:
   level: debug
 accessLog:
   filePath: ""             
-  format: json     # 0.0.7 turned this off. we want it         
+  # format: json     # 0.0.7 turned this off. we want it         
   bufferingSize: 0         
   # filters:
   #   statusCodes: ["200-600"]   
@@ -30,5 +30,6 @@ api:
 providers:
   docker: false
   file:
-    filename: /routes.yml
+    # filename: /traefik/routes.yml
+    directory: /traefik/
     watch: true
