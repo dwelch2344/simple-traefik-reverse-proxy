@@ -7,20 +7,30 @@ http:
 
   # create a route for both current and legacy
   routers:
-    registry:
-      rule: Host(`registry.localhost`) && (PathPrefix(`/npm/pkg/@neverendingsupport`) || PathPrefix(`/npm/pkg/@xlts.dev`))
-      service: registry-svc
-    legacy:
+    registry-local:
+      rule: Host(`registry.localhost`) # && (PathPrefix(`/npm/pkg/@neverendingsupport`) || PathPrefix(`/npm/pkg/@xlts.dev`))
+      service: registry-local-svc
+    registry-prod:
+      rule: Host(`registry.system.herodevs.io`) && (PathPrefix(`/npm/pkg/@neverendingsupport`) || PathPrefix(`/npm/pkg/@xlts.dev`))
+      service: registry-prod-svc
+    legacy-local:
       rule: Host(`legacy.localhost`) && (PathPrefix(`/@neverendingsupport`) || PathPrefix(`/@xlts.dev`))
       middlewares:
         - addLegacy # add the prefix
-      service: legacy-svc
+      service: registry-local-svc
+    legacy-prod:
+      # rule: (Host(`xlts.system.herodevs.io`) || Host(`registry.xlts.dev`)) && (PathPrefix(`/@neverendingsupport`) || PathPrefix(`/@xlts.dev`))
+      rule: (Host(`xlts.system.herodevs.io`) || Host(`registry.xlts.dev`)) # && (PathPrefix(`/@neverendingsupport`) || PathPrefix(`/@xlts.dev`))
+      middlewares:
+        - addLegacy # add the prefix
+      service: registry-prod-svc
   services:
-    registry-svc:
+    registry-local-svc:
       loadBalancer:
         servers:
         - url: "http://host.docker.internal:3010/"
-    legacy-svc:
+    registry-prod-svc:
       loadBalancer:
+        passHostHeader: false
         servers:
-        - url: "http://host.docker.internal:3010/"
+        - url: "https://registry.nes.herodevs.com/"

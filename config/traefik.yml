@@ -1,5 +1,24 @@
 log:
   level: debug
+accessLog:
+  filePath: ""             
+  format: json     # 0.0.7 turned this off. we want it         
+  bufferingSize: 0         
+  # filters:
+  #   statusCodes: ["200-600"]   
+  #   retryAttempts: true     
+  #   minDuration: 20         
+  fields:                   
+    defaultMode: keep      
+    # names:                 
+    #   ClientUsername: drop
+    headers:           
+      defaultMode: keep    
+      names:                
+        User-Agent: keep 
+        Authorization: drop
+        Content-Type: keep
+        Host: keep
 entrypoints:
   web:
     address: :80
